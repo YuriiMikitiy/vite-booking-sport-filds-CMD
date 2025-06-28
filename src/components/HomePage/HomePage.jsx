@@ -25,7 +25,7 @@ function MenuItem({ text, w = "w-auto" }) {
   );
 }
 
-function ItemSport({ text, w = "w-auto" }) {
+function ItemSport({ text, w = "w-auto", isCancelled = null }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -51,7 +51,18 @@ function ItemSport({ text, w = "w-auto" }) {
         title="Натисніть для копіювання"
         className={`hidden md:flex pl-5 items-center min-h-10 ${w} text-sm cursor-pointer hover:bg-gray-100 transition duration-200 break-all`}
       >
-        <span>{text}</span>
+        {isCancelled === null ? (
+          <span>{text}</span>
+        ) : (
+          <div className="flex items-center gap-2">
+            <span>{isCancelled ? "Так" : "Ні"}</span>
+            <span
+              className={`w-3 h-3 rounded-full ${
+                isCancelled ? "bg-red-500" : "bg-green-500"
+              }`}
+            ></span>
+          </div>
+        )}
       </div>
     </>
   );
@@ -70,11 +81,60 @@ export default function HomePage() {
   ];
 
   const itemsSportData = [
-    ["1", "12:00-14:00", "yura.mikitiytest1@gmail.com", "+380969013323", "Волейбол", "425.00 грн", "Було б прикольно отримати спортивний інвентар", "Ні"],
-    ["2", "14:00-16:00", "anna.koval@gmail.com", "+380672223344", "Футбол", "650.00 грн", "Гратимемо з друзями, м’яч маємо", "Ні"],
-    ["3", "10:00-12:00", "oleksii.p@ukr.net", "+380503456789", "Теніс", "300.00 грн", "Потрібні ракетки напрокат", "Так"],
-    ["4", "16:00-18:00", "sergiy1985@gmail.com", "+380935432198", "Баскетбол", "500.00 грн", "Потрібні м’ячі й табло", "Ні"],
-    ["5", "18:00-20:00", "vika.sport@meta.ua", "+380991112233", "Бадмінтон", "220.00 грн", "Можна сітку нижче поставити?", "Ні"],
+    [
+      "12:00-14:00",
+      "yura.mikitiytest1@gmail.com",
+      "+380969013323",
+      "Волейбол",
+      "425.00 грн",
+      "Було б прикольно отримати спортивний інвентар",
+      false,
+    ],
+    [
+      "14:00-16:00",
+      "anna.koval@gmail.com",
+      "+380672223344",
+      "Футбол",
+      "650.00 грн",
+      "Гратимемо з друзями, м’яч маємо",
+      false,
+    ],
+    [
+      "10:00-12:00",
+      "oleksii.p@ukr.net",
+      "+380503456789",
+      "Теніс",
+      "300.00 грн",
+      "Потрібні ракетки напрокат",
+      true,
+    ],
+    [
+      "16:00-18:00",
+      "sergiy1985@gmail.com",
+      "+380935432198",
+      "Баскетбол",
+      "500.00 грн",
+      "Потрібні м’ячі й табло",
+      false,
+    ],
+    [
+      "18:00-20:00",
+      "vika.sport@meta.ua",
+      "+380991112233",
+      "Бадмінтон",
+      "220.00 грн",
+      "Можна сітку нижче поставити?",
+      false,
+    ],
+    [
+      "20:00-22:00",
+      "oleksii.p@ukr.net",
+      "+380503456789",
+      "Теніс",
+      "300.00 грн",
+      "Потрібні ракетки напрокат",
+      true,
+    ],
   ];
 
   return (
@@ -99,7 +159,7 @@ export default function HomePage() {
           <section className="my-[10px] ml-2">Експорт</section>
         </button>
       </div>
-{/* //border-2 border-[#eff2f7] */}
+      {/* //border-2 border-[#eff2f7] */}
       <div className="hidden md:block overflow-x-auto mx-3 mb-10">
         <div className="min-w-max">
           <div className="flex border-b-2 border-[#ffd4a8]">
@@ -110,8 +170,14 @@ export default function HomePage() {
 
           {itemsSportData.map((row, rowIndex) => (
             <div key={rowIndex} className="flex border-b-2 border-[#eff2f7]">
+              <ItemSport text={rowIndex + 1} w={menuItems[0]?.w} />
               {row.map((text, i) => (
-                <ItemSport key={i} text={text} w={menuItems[i]?.w || "w-auto"} />
+                <ItemSport
+                  key={i}
+                  text={text}
+                  w={menuItems[i + 1]?.w || "w-auto"}
+                  isCancelled={i === row.length - 1 ? text === true : null}
+                />
               ))}
             </div>
           ))}
@@ -121,7 +187,11 @@ export default function HomePage() {
       <div className="md:hidden flex flex-col items-center mt-8 text-[26px] mx-3">
         <div className="flex justify-center items-center text-center bg-[#ff3333BF] box-border rounded-[12px] text-[26px] px-4 py-2 gap-2">
           <span>Для коректного відображення списку поверніть екран</span>
-          <img className="h-12 w-12 rotate-90" src="/src/assets/Turn_screen_icons.svg" alt="Turn_screen" />
+          <img
+            className="h-12 w-12 rotate-90"
+            src="/src/assets/Turn_screen_icons.svg"
+            alt="Turn_screen"
+          />
         </div>
 
         <img
